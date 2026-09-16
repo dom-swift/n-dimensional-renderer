@@ -20,16 +20,21 @@ fetchcontent_makeavailable(glfw)
 
 find_package(OpenGL REQUIRED)
 
-file(GLOB NDR_SOURCES CONFIGURE_DEPENDS src/*.cpp)
+file(GLOB NDR_SOURCES CONFIGURE_DEPENDS
+  app/*.cpp
+  src/app/*.cpp
+  src/platform/*.cpp
+  src/render/*.cpp
+)
 
 add_executable(ndr ${NDR_SOURCES})
 
-target_link_libraries(MI_PROJECT0
-  PRIVATE glfw
-  PRIVATE OpenGL::GL
+target_link_libraries(ndr
+PRIVATE glfw
+PRIVATE OpenGL::GL
 )
 
 target_include_directories(ndr
-  PRIVATE ${CMAKE_SOURCE_DIR}/include
-  PRIVATE ${CMAKE_SOURCE_DIR}/external
+PRIVATE ${CMAKE_SOURCE_DIR}/include
+PRIVATE ${CMAKE_SOURCE_DIR}/external
 )
