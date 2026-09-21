@@ -6,6 +6,18 @@
 
 using namespace ndr::platform;
 
+void Window::OnFramebufferResize(int width, int height) {
+  if (m_resizeCallback)
+    m_resizeCallback(width, height);
+}
+
+void Window::FrameBufferResizeCallback(GLFWwindow *window, int width,
+                                       int height) {
+  auto *self = static_cast<Window *>(glfwGetWindowUserPointer(window));
+
+  self->OnFramebufferResize(width, height);
+}
+
 Window::Window(int width, int height, std::string title) {
   if (!glfwInit())
     throw std::runtime_error("Failed to initialize GLFW");
@@ -15,6 +27,9 @@ Window::Window(int width, int height, std::string title) {
     glfwTerminate();
     throw std::runtime_error("Failed to create GLFW window");
   }
+
+  glfwSetWindowUserPointer(m_window, this);
+  glfwSetFramebufferSizeCallback(m_window, FrameBufferResizeCallback);
 
   glfwMakeContextCurrent(m_window);
 
@@ -29,6 +44,10 @@ Window::Window(int width, int height, std::string title) {
 void Window::Destroy() {
   glfwDestroyWindow(m_window);
   glfwTerminate();
+}
+
+void Window::SetResizeCallback(ResizeCallback callback) {
+  m_resizeCallback = callback;
 }
 
 bool Window::ShouldClose() {

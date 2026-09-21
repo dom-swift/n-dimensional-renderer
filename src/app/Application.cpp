@@ -4,7 +4,10 @@
 
 using namespace ndr;
 
-Application::Application() : m_window(1280, 720, "NDR"), m_renderer() {}
+Application::Application() : m_window(1280, 720, "NDR"), m_renderer(1280, 720) {
+  m_window.SetResizeCallback(
+      [this](int width, int height) { m_renderer.Resize(width, height); });
+}
 
 int Application::Run() {
   while (!m_window.ShouldClose()) {

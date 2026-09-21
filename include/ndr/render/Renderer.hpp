@@ -10,7 +10,9 @@ private:
   GLuint m_vertexBuffer;
 
 public:
-  Renderer();
+  Renderer(int width, int height);
+
+  void Resize(int width, int height);
 
   void Clear();
   void Render();
