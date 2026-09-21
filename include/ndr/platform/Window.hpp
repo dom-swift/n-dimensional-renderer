@@ -1,35 +1,36 @@
-#ifndef NDR_WINDOW
-#define NDR_WINDOW
+#pragma once
 
 #include <functional>
-#define GLFW_INCLUDE_NONE
-#include <GLFW/glfw3.h>
 #include <string>
+
+struct GLFWwindow;
 
 namespace ndr::platform {
 
 class Window {
-private:
-  GLFWwindow *m_window = nullptr;
-
+public:
   using ResizeCallback = std::function<void(int, int)>;
-  ResizeCallback m_resizeCallback;
-  void OnFramebufferResize(int width, int height);
 
-  static void FrameBufferResizeCallback(GLFWwindow *window, int width,
+  Window(int width, int height, const std::string &title);
+  ~Window();
+
+  Window(const Window &) = delete;
+  Window &operator=(const Window &) = delete;
+
+  void setResizeCallback(ResizeCallback callback);
+
+  [[nodiscard]] bool shouldClose() const;
+  void swapBuffers();
+  void pollEvents();
+
+private:
+  void onFramebufferResize(int width, int height);
+
+  static void framebufferResizeCallback(GLFWwindow *window, int width,
                                         int height);
 
-public:
-  Window(int width, int height, std::string title);
-  void Destroy();
-
-  void SetResizeCallback(ResizeCallback callback);
-
-  bool ShouldClose();
-  void SwapBuffers();
-  void PollEvents();
+  GLFWwindow *m_window = nullptr;
+  ResizeCallback m_resizeCallback;
 };
 
 } // namespace ndr::platform
-
-#endif // !NDR_WINDOW

@@ -3,57 +3,58 @@ project(ndr VERSION 0.1.0 LANGUAGES C CXX)
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
-# ------------------------------------------------------------
-# GLFW (FetchContent)
-# ------------------------------------------------------------
 include(FetchContent)
 
-fetchcontent_declare(
-    glfw
-    GIT_REPOSITORY https://github.com/glfw/glfw.git
-    GIT_TAG 3.4
-    GIT_SHALLOW TRUE
+FetchContent_Declare(
+  glfw
+  GIT_REPOSITORY https://github.com/glfw/glfw.git
+  GIT_TAG 3.4
+  GIT_SHALLOW TRUE
 )
 
-fetchcontent_makeavailable(glfw)
+FetchContent_MakeAvailable(glfw)
 
-fetchcontent_declare(
-    glad
-    GIT_REPOSITORY https://github.com/Dav1dde/glad.git
-    GIT_TAG        v2.0.6
-    GIT_SHALLOW    TRUE
-    GIT_PROGRESS   TRUE
-    SOURCE_SUBDIR  cmake
+FetchContent_Declare(
+  glad
+  GIT_REPOSITORY https://github.com/Dav1dde/glad.git
+  GIT_TAG v2.0.6
+  GIT_SHALLOW TRUE
+  GIT_PROGRESS TRUE
+  SOURCE_SUBDIR cmake
 )
 
-fetchcontent_makeavailable(glad)
+FetchContent_MakeAvailable(glad)
 
 glad_add_library(
-    glad
-    REPRODUCIBLE
-    LOADER
-    API gl:core=4.6
+  glad
+  REPRODUCIBLE
+  LOADER
+  API gl:core=4.6
 )
 
 find_package(OpenGL REQUIRED)
 
-file(GLOB NDR_SOURCES CONFIGURE_DEPENDS
-  app/*.cpp
-  src/app/*.cpp
-  src/platform/*.cpp
-  src/render/*.cpp
+add_executable(ndr
+  app/main.cpp
+  src/app/Application.cpp
+  src/platform/Window.cpp
+  src/render/Renderer.cpp
+  src/render/ShaderProgram.cpp
 )
 
-add_executable(ndr ${NDR_SOURCES})
-
-target_link_libraries(ndr
-PRIVATE glfw
-PRIVATE OpenGL::GL
-PRIVATE glad
-)
+target_link_libraries(ndr PRIVATE glfw OpenGL::GL glad)
 
 target_include_directories(ndr
-PRIVATE ${CMAKE_SOURCE_DIR}/include
-PRIVATE ${CMAKE_SOURCE_DIR}/external
+  PRIVATE
+    "${PROJECT_SOURCE_DIR}/include"
+)
+
+add_custom_command(
+  TARGET ndr POST_BUILD
+  COMMAND ${CMAKE_COMMAND} -E copy_directory
+          "${PROJECT_SOURCE_DIR}/shaders"
+          "$<TARGET_FILE_DIR:ndr>/shaders"
+  VERBATIM
 )

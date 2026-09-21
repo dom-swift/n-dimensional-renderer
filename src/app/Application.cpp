@@ -1,27 +1,23 @@
 #include "ndr/app/Application.hpp"
-#include "ndr/platform/Window.hpp"
-#include "ndr/render/Renderer.hpp"
 
-using namespace ndr;
+namespace ndr {
 
 Application::Application() : m_window(1280, 720, "NDR"), m_renderer(1280, 720) {
-  m_window.SetResizeCallback(
-      [this](int width, int height) { m_renderer.Resize(width, height); });
+  m_window.setResizeCallback(
+      [this](int width, int height) { m_renderer.resize(width, height); });
 }
 
-int Application::Run() {
-  while (!m_window.ShouldClose()) {
-    m_renderer.Clear();
+int Application::run() {
+  while (!m_window.shouldClose()) {
+    m_renderer.clear();
 
-    m_renderer.Render();
+    m_renderer.render();
 
-    m_window.SwapBuffers();
-
-    // Not having this at the end causes a segfault
-    // I haven't yet decided to figure out why
-    m_window.PollEvents();
+    m_window.swapBuffers();
+    m_window.pollEvents();
   }
+
   return 0;
 }
 
-void Application::Shutdown() { m_window.Destroy(); }
+} // namespace ndr

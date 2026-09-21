@@ -1,35 +1,27 @@
 #include "ndr/platform/Window.hpp"
-#include "GLFW/glfw3.h"
 
+#define GLFW_INCLUDE_NONE
+#include <GLFW/glfw3.h>
 #include <glad/gl.h>
+
 #include <stdexcept>
+#include <utility>
 
-using namespace ndr::platform;
+namespace ndr::platform {
 
-void Window::OnFramebufferResize(int width, int height) {
-  if (m_resizeCallback)
-    m_resizeCallback(width, height);
-}
-
-void Window::FrameBufferResizeCallback(GLFWwindow *window, int width,
-                                       int height) {
-  auto *self = static_cast<Window *>(glfwGetWindowUserPointer(window));
-
-  self->OnFramebufferResize(width, height);
-}
-
-Window::Window(int width, int height, std::string title) {
-  if (!glfwInit())
+Window::Window(int width, int height, const std::string &title) {
+  if (!glfwInit()) {
     throw std::runtime_error("Failed to initialize GLFW");
+  }
 
   m_window = glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
-  if (!m_window) {
+  if (m_window == nullptr) {
     glfwTerminate();
     throw std::runtime_error("Failed to create GLFW window");
   }
 
   glfwSetWindowUserPointer(m_window, this);
-  glfwSetFramebufferSizeCallback(m_window, FrameBufferResizeCallback);
+  glfwSetFramebufferSizeCallback(m_window, framebufferResizeCallback);
 
   glfwMakeContextCurrent(m_window);
 
@@ -41,20 +33,40 @@ Window::Window(int width, int height, std::string title) {
   }
 }
 
-void Window::Destroy() {
-  glfwDestroyWindow(m_window);
+Window::~Window() {
+  if (m_window != nullptr) {
+    glfwDestroyWindow(m_window);
+    m_window = nullptr;
+  }
+
   glfwTerminate();
 }
 
-void Window::SetResizeCallback(ResizeCallback callback) {
-  m_resizeCallback = callback;
+void Window::setResizeCallback(ResizeCallback callback) {
+  m_resizeCallback = std::move(callback);
 }
 
-bool Window::ShouldClose() {
+bool Window::shouldClose() const {
   return glfwWindowShouldClose(m_window) ||
          glfwGetKey(m_window, GLFW_KEY_ESCAPE) == GLFW_PRESS;
 }
 
-void Window::SwapBuffers() { glfwSwapBuffers(m_window); }
+void Window::swapBuffers() { glfwSwapBuffers(m_window); }
 
-void Window::PollEvents() { glfwPollEvents(); }
+void Window::pollEvents() { glfwPollEvents(); }
+
+void Window::onFramebufferResize(int width, int height) {
+  if (m_resizeCallback) {
+    m_resizeCallback(width, height);
+  }
+}
+
+void Window::framebufferResizeCallback(GLFWwindow *window, int width,
+                                       int height) {
+  auto *self = static_cast<Window *>(glfwGetWindowUserPointer(window));
+  if (self != nullptr) {
+    self->onFramebufferResize(width, height);
+  }
+}
+
+} // namespace ndr::platform
