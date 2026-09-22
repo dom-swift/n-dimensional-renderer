@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.20)
 project(ndr VERSION 0.1.0 LANGUAGES C CXX)
 
 set(CMAKE_CXX_STANDARD 23)
@@ -31,7 +31,7 @@ glad_add_library(
   glad
   REPRODUCIBLE
   LOADER
-  API gl:core=4.6
+  API gl:core=3.3
 )
 
 find_package(OpenGL REQUIRED)
@@ -53,13 +53,20 @@ target_include_directories(ndr
     "${PROJECT_SOURCE_DIR}/include"
 )
 
-add_custom_command(
-  TARGET ndr POST_BUILD
+target_compile_options(ndr PRIVATE
+  "$<$<CXX_COMPILER_ID:GNU,Clang>:-Wall;-Wextra;-Wpedantic;-Wconversion>"
+  "$<$<CXX_COMPILER_ID:MSVC>:/W4;/permissive->"
+)
+
+add_custom_target(ndr_resources ALL
   COMMAND ${CMAKE_COMMAND} -E copy_directory
           "${PROJECT_SOURCE_DIR}/resources"
           "$<TARGET_FILE_DIR:ndr>/resources"
+  COMMENT "Copying runtime resources"
   VERBATIM
 )
+
+add_dependencies(ndr_resources ndr)
 
 include(GNUInstallDirs)
 

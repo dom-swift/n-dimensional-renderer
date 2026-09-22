@@ -14,6 +14,13 @@ Window::Window(int width, int height, const std::string &title) {
     throw std::runtime_error("Failed to initialize GLFW");
   }
 
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+  glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+#if defined(__APPLE__)
+  glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
+#endif
+
   m_window = glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
   if (m_window == nullptr) {
     glfwTerminate();
@@ -49,6 +56,12 @@ void Window::setResizeCallback(ResizeCallback callback) {
 bool Window::shouldClose() const {
   return glfwWindowShouldClose(m_window) ||
          glfwGetKey(m_window, GLFW_KEY_ESCAPE) == GLFW_PRESS;
+}
+
+FramebufferSize Window::framebufferSize() const {
+  FramebufferSize size{};
+  glfwGetFramebufferSize(m_window, &size.width, &size.height);
+  return size;
 }
 
 void Window::swapBuffers() { glfwSwapBuffers(m_window); }

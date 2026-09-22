@@ -7,6 +7,11 @@ struct GLFWwindow;
 
 namespace ndr::platform {
 
+struct FramebufferSize {
+  int width;
+  int height;
+};
+
 class Window {
 public:
   using ResizeCallback = std::function<void(int, int)>;
@@ -20,6 +25,7 @@ public:
   void setResizeCallback(ResizeCallback callback);
 
   [[nodiscard]] bool shouldClose() const;
+  [[nodiscard]] FramebufferSize framebufferSize() const;
   void swapBuffers();
   void pollEvents();
 

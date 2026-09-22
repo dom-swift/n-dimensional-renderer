@@ -9,7 +9,6 @@ class ResourceLoader {
 public:
   explicit ResourceLoader(std::filesystem::path root);
 
-  [[nodiscard]] const std::filesystem::path &root() const noexcept;
   [[nodiscard]] std::filesystem::path
   resolve(const std::filesystem::path &relativePath) const;
   [[nodiscard]] std::string

@@ -1,10 +1,17 @@
 #include "ndr/app/Application.hpp"
 
+#include <utility>
+
 namespace ndr {
 
-Application::Application() : m_window(1280, 720, "NDR"), m_renderer(1280, 720) {
+Application::Application(std::filesystem::path resourceRoot)
+    : m_window(1280, 720, "NDR"), m_resources(std::move(resourceRoot)),
+      m_renderer(m_resources) {
   m_window.setResizeCallback(
       [this](int width, int height) { m_renderer.resize(width, height); });
+
+  const auto [width, height] = m_window.framebufferSize();
+  m_renderer.resize(width, height);
 }
 
 int Application::run() {
