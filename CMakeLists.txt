@@ -39,9 +39,11 @@ find_package(OpenGL REQUIRED)
 add_executable(ndr
   app/main.cpp
   src/app/Application.cpp
+  src/platform/Paths.cpp
   src/platform/Window.cpp
   src/render/Renderer.cpp
   src/render/ShaderProgram.cpp
+  src/resources/ResourceLoader.cpp
 )
 
 target_link_libraries(ndr PRIVATE glfw OpenGL::GL glad)
@@ -54,7 +56,19 @@ target_include_directories(ndr
 add_custom_command(
   TARGET ndr POST_BUILD
   COMMAND ${CMAKE_COMMAND} -E copy_directory
-          "${PROJECT_SOURCE_DIR}/shaders"
-          "$<TARGET_FILE_DIR:ndr>/shaders"
+          "${PROJECT_SOURCE_DIR}/resources"
+          "$<TARGET_FILE_DIR:ndr>/resources"
   VERBATIM
+)
+
+include(GNUInstallDirs)
+
+install(
+  TARGETS ndr
+  RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
+)
+
+install(
+  DIRECTORY "${PROJECT_SOURCE_DIR}/resources/"
+  DESTINATION "${CMAKE_INSTALL_BINDIR}/resources"
 )
