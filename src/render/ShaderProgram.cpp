@@ -100,4 +100,16 @@ ShaderProgram::~ShaderProgram() { glDeleteProgram(m_program); }
 
 void ShaderProgram::use() const { glUseProgram(m_program); }
 
+void ShaderProgram::setBool(const std::string &name, bool value) const {
+  glUniform1i(glGetUniformLocation(m_program, name.c_str()), (int)value);
+}
+
+void ShaderProgram::setInt(const std::string &name, int value) const {
+  glUniform1i(glGetUniformLocation(m_program, name.c_str()), value);
+}
+
+void ShaderProgram::setFloat(const std::string &name, float value) const {
+  glUniform1f(glGetUniformLocation(m_program, name.c_str()), value);
+}
+
 } // namespace ndr::render
