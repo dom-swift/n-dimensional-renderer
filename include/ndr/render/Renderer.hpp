@@ -1,10 +1,8 @@
 #pragma once
 
+#include "ndr/render/Mesh.hpp"
 #include "ndr/render/ShaderProgram.hpp"
-
-namespace ndr::resources {
-class ResourceLoader;
-}
+#include "ndr/resources/ResourceLoader.hpp"
 
 namespace ndr::render {
 
@@ -23,8 +21,7 @@ public:
 
 private:
   ShaderProgram m_program;
-  unsigned int m_vertexBuffer = 0;
-  unsigned int m_vertexArray = 0;
+  Mesh m_mesh;
 };
 
 } // namespace ndr::render

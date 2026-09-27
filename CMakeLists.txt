@@ -42,6 +42,7 @@ add_executable(ndr
   src/platform/Paths.cpp
   src/platform/Window.cpp
   src/render/Renderer.cpp
+  src/render/Mesh.cpp
   src/render/ShaderProgram.cpp
   src/resources/ResourceLoader.cpp
 )
