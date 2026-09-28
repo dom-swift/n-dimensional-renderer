@@ -1,6 +1,8 @@
 #include "ndr/render/Renderer.hpp"
 
 #include <glad/gl.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 namespace ndr::render {
 
@@ -25,6 +27,10 @@ void Renderer::clear() {
 
 void Renderer::render() {
   m_program.use();
+  glm::mat4 trans = glm::mat4(1.0f);
+  trans = glm::translate(trans, glm::vec3(0.5f, -0.5f, 0.0f));
+  trans = glm::rotate(trans, 33.0f, glm::vec3(0.0f, 0.0f, 1.0f));
+  m_program.setMat4("transform", trans);
   m_mesh.draw();
 }
 

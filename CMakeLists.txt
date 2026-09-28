@@ -7,16 +7,16 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 include(FetchContent)
 
-FetchContent_Declare(
+fetchcontent_declare(
   glfw
   GIT_REPOSITORY https://github.com/glfw/glfw.git
   GIT_TAG 3.4
   GIT_SHALLOW TRUE
 )
 
-FetchContent_MakeAvailable(glfw)
+fetchcontent_makeavailable(glfw)
 
-FetchContent_Declare(
+fetchcontent_declare(
   glad
   GIT_REPOSITORY https://github.com/Dav1dde/glad.git
   GIT_TAG v2.0.6
@@ -25,7 +25,7 @@ FetchContent_Declare(
   SOURCE_SUBDIR cmake
 )
 
-FetchContent_MakeAvailable(glad)
+fetchcontent_makeavailable(glad)
 
 glad_add_library(
   glad
@@ -33,6 +33,21 @@ glad_add_library(
   LOADER
   API gl:core=3.3
 )
+
+set(GLM_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+
+fetchcontent_declare(
+    glm
+
+    GIT_REPOSITORY https://github.com/g-truc/glm.git
+    GIT_TAG 1.0.3
+
+    GIT_SHALLOW TRUE
+    GIT_PROGRESS TRUE
+    SYSTEM
+)
+
+fetchcontent_makeavailable(glm)
 
 find_package(OpenGL REQUIRED)
 
@@ -47,7 +62,7 @@ add_executable(ndr
   src/resources/ResourceLoader.cpp
 )
 
-target_link_libraries(ndr PRIVATE glfw OpenGL::GL glad)
+target_link_libraries(ndr PRIVATE glfw OpenGL::GL glad glm)
 
 target_include_directories(ndr
   PRIVATE
