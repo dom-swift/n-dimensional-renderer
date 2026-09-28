@@ -56,8 +56,9 @@ add_executable(ndr
   src/app/Application.cpp
   src/platform/Paths.cpp
   src/platform/Window.cpp
-  src/render/Renderer.cpp
+  src/render/Camera.cpp
   src/render/Mesh.cpp
+  src/render/Renderer.cpp
   src/render/ShaderProgram.cpp
   src/resources/ResourceLoader.cpp
 )
