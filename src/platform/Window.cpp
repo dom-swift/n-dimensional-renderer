@@ -29,6 +29,10 @@ Window::Window(int width, int height, const std::string &title) {
 
   glfwSetWindowUserPointer(m_window, this);
   glfwSetFramebufferSizeCallback(m_window, framebufferResizeCallback);
+  glfwSetKeyCallback(m_window, keyCallback);
+  glfwSetCursorPosCallback(m_window, mouseCallback);
+
+  glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
   glfwMakeContextCurrent(m_window);
 
@@ -49,8 +53,18 @@ Window::~Window() {
   glfwTerminate();
 }
 
+double Window::deltaTime() { return m_deltaTime; }
+
 void Window::setResizeCallback(ResizeCallback callback) {
   m_resizeCallback = std::move(callback);
+}
+
+void Window::setKeyCallback(KeyCallback callback) {
+  m_keyCallback = std::move(callback);
+}
+
+void Window::setMouseCallback(MouseCallback callback) {
+  m_mouseCallback = std::move(callback);
 }
 
 bool Window::shouldClose() const {
@@ -66,11 +80,29 @@ FramebufferSize Window::framebufferSize() const {
 
 void Window::swapBuffers() { glfwSwapBuffers(m_window); }
 
-void Window::pollEvents() { glfwPollEvents(); }
+void Window::pollEvents() {
+  glfwPollEvents();
+  double time = glfwGetTime();
+  static double lastTime = time;
+  m_deltaTime = time - lastTime;
+  lastTime = time;
+}
 
 void Window::onFramebufferResize(int width, int height) {
   if (m_resizeCallback) {
     m_resizeCallback(width, height);
+  }
+}
+
+void Window::onKey(int key, int scancode, int action, int mods) {
+  if (m_keyCallback) {
+    m_keyCallback(key, scancode, action, mods);
+  }
+}
+
+void Window::onMouse(double xpos, double ypos) {
+  if (m_mouseCallback) {
+    m_mouseCallback(xpos, ypos);
   }
 }
 
@@ -79,6 +111,22 @@ void Window::framebufferResizeCallback(GLFWwindow *window, int width,
   auto *self = static_cast<Window *>(glfwGetWindowUserPointer(window));
   if (self != nullptr) {
     self->onFramebufferResize(width, height);
+  }
+}
+
+void Window::keyCallback(GLFWwindow *window, int key, int scancode, int action,
+                         int mods) {
+
+  auto *self = static_cast<Window *>(glfwGetWindowUserPointer(window));
+  if (self != nullptr) {
+    self->onKey(key, scancode, action, mods);
+  }
+}
+
+void Window::mouseCallback(GLFWwindow *window, double xpos, double ypos) {
+  auto *self = static_cast<Window *>(glfwGetWindowUserPointer(window));
+  if (self != nullptr) {
+    self->onMouse(xpos, ypos);
   }
 }
 

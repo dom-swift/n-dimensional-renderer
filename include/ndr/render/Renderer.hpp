@@ -15,6 +15,7 @@ public:
   Renderer &operator=(const Renderer &) = delete;
 
   void resize(int width, int height);
+  void view(glm::mat4 view);
 
   void clear();
   void render();
