@@ -35,7 +35,7 @@ void Camera::moveRight(double deltaTime) {
 }
 
 void Camera::moveUp(double deltaTime) {
-  m_pos += m_up * (m_speed * (float)deltaTime);
+  m_pos += glm::vec3(0.0f, 1.0f, 0.0f) * (m_speed * (float)deltaTime);
   updateView();
 }
 
