@@ -33,6 +33,10 @@ public:
   // Use negative deltaTime to move left
   void moveRight(double deltaTime);
 
+  // Moves camera along its up vector
+  // Use negative deltaTime to move down
+  void moveUp(double deltaTime);
+
   // Turns the camera using the given x and y mouse inputs
   void turn(double x, double y);
 

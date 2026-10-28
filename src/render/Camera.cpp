@@ -34,6 +34,11 @@ void Camera::moveRight(double deltaTime) {
   updateView();
 }
 
+void Camera::moveUp(double deltaTime) {
+  m_pos += m_up * (m_speed * (float)deltaTime);
+  updateView();
+}
+
 // Adds mouse input to pitch and yaw (clamping pitch),
 // Then recalculates m_front
 void Camera::turn(double x, double y) {

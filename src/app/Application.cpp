@@ -58,6 +58,10 @@ void Application::moveCamera(double deltaTime) {
     m_camera.moveRight(deltaTime);
   if (m_inputs[GLFW_KEY_A])
     m_camera.moveRight(-deltaTime);
+  if (m_inputs[GLFW_KEY_E])
+    m_camera.moveUp(deltaTime);
+  if (m_inputs[GLFW_KEY_Q])
+    m_camera.moveUp(-deltaTime);
 }
 
 } // namespace ndr
