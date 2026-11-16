@@ -1,7 +1,9 @@
 #include "ndr/render/Renderer.hpp"
+#include "ndr/geometry/Geometry.hpp"
 
 #include <glad/gl.h>
 #include <glm/ext/matrix_float4x4.hpp>
+#include <glm/ext/matrix_transform.hpp>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -10,10 +12,10 @@ namespace ndr::render {
 Renderer::Renderer(const resources::ResourceLoader &resources)
     : m_program(resources.loadText("shaders/basic.vert"),
                 resources.loadText("shaders/basic.frag"), "shaders/basic.vert",
-                "shaders/basic.frag"),
-      m_mesh({0.5f, 0.5f, 0.0f, 0.5f, -0.5f, 0.0f, -0.5f, -0.5f, 0.0f, -0.5f,
-              0.5f, 0.0f},
-             {0, 1, 3, 1, 2, 3}) {}
+                "shaders/basic.frag") {
+  auto cube = ndr::geometry::cube();
+  m_mesh = ndr::render::Mesh(cube.getVerticies(), cube.getIndices());
+}
 
 Renderer::~Renderer() {}
 
@@ -44,6 +46,11 @@ void Renderer::render() {
   m_program.use();
   glm::mat4 model(1.0f);
   model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+  model = glm::rotate(model,
+                      std::chrono::duration<float>(
+                          std::chrono::steady_clock::now().time_since_epoch())
+                          .count(),
+                      glm::vec3(0.0f, 1.0f, 0.0f));
   m_program.setMat4("model", model);
   m_mesh.draw();
 }

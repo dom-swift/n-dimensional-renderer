@@ -45,8 +45,8 @@ private:
   glm::vec3 m_front;
   glm::vec3 m_up;
 
-  double m_yaw;
-  double m_pitch;
+  double m_yaw = -90.0;
+  double m_pitch = 0.0;
 
   float m_speed;
   float m_sensitivity;

@@ -61,6 +61,8 @@ add_executable(ndr
   src/render/Renderer.cpp
   src/render/ShaderProgram.cpp
   src/resources/ResourceLoader.cpp
+  src/math/Vector.cpp
+  src/geometry/Geometry.cpp
 )
 
 target_link_libraries(ndr PRIVATE glfw OpenGL::GL glad glm)

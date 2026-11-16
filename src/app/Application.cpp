@@ -10,7 +10,7 @@ namespace ndr {
 Application::Application(std::filesystem::path resourceRoot)
     : m_window(1280, 720, "NDR"), m_resources(std::move(resourceRoot)),
       m_renderer(m_resources),
-      m_camera(glm::vec3(0.0f, 0.0f, -3.0f), 2.5f, 0.2f) {
+      m_camera(glm::vec3(0.0f, 0.0f, 3.0f), 2.5f, 0.2f) {
   m_window.setResizeCallback(
       [this](int width, int height) { m_renderer.resize(width, height); });
   m_window.setKeyCallback([this](int key, int scancode, int action, int mods) {

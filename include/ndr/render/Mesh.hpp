@@ -4,12 +4,20 @@
 
 namespace ndr::render {
 
+/*
+ *  Static mesh, doesn't store points for that reason.
+ *  Used for any <=3 dimensional objects.
+ * */
 class Mesh {
 public:
   Mesh(std::vector<float> verticies, std::vector<unsigned int> indices);
   ~Mesh();
 
   Mesh() = default;
+  Mesh(const Mesh &) = delete;
+  Mesh &operator=(const Mesh &) = delete;
+  Mesh(Mesh &&other) noexcept;
+  Mesh &operator=(Mesh &&other) noexcept;
 
   void draw();
 

@@ -1,6 +1,7 @@
 #include "ndr/render/Mesh.hpp"
 
 #include <glad/gl.h>
+#include <utility>
 
 namespace ndr::render {
 
@@ -33,10 +34,27 @@ Mesh::~Mesh() {
   glDeleteVertexArrays(1, &m_vertexArray);
 }
 
+Mesh::Mesh(Mesh &&other) noexcept
+    : m_vertexBuffer(std::exchange(other.m_vertexBuffer, 0)),
+      m_elementBuffer(std::exchange(other.m_elementBuffer, 0)),
+      m_vertexArray(std::exchange(other.m_vertexArray, 0)),
+      m_indexCount(std::exchange(other.m_indexCount, 0)) {}
+
+Mesh &Mesh::operator=(Mesh &&other) noexcept {
+  if (this != &other) {
+    Mesh incoming(std::move(other));
+    std::swap(m_vertexBuffer, incoming.m_vertexBuffer);
+    std::swap(m_elementBuffer, incoming.m_elementBuffer);
+    std::swap(m_vertexArray, incoming.m_vertexArray);
+    std::swap(m_indexCount, incoming.m_indexCount);
+  }
+  return *this;
+}
+
 void Mesh::draw() {
   glBindVertexArray(m_vertexArray);
 
-  glDrawElements(GL_TRIANGLES, m_indexCount, GL_UNSIGNED_INT, nullptr);
+  glDrawElements(GL_LINES, m_indexCount, GL_UNSIGNED_INT, nullptr);
 }
 
 } // namespace ndr::render
