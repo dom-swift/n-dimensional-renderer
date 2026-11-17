@@ -17,7 +17,15 @@ void Vector::initDimensions(dimension dimensions) {
   m_data = std::make_unique<float[]>(dimensions);
 }
 
-float Vector::operator[](dimension component) const {
+void Vector::operator+=(const Vector &vec) {
+  if (vec.getDimensions() != m_dimensions)
+    return;
+  for (dimension i = 0; i < m_dimensions; i++) {
+    m_data[i] += vec[i];
+  }
+}
+
+float &Vector::operator[](dimension component) const {
   return m_data[component];
 }
 

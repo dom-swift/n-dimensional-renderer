@@ -1,5 +1,6 @@
 #pragma once
 
+#include <concepts>
 #include <memory>
 namespace ndr::math {
 
@@ -33,7 +34,13 @@ public:
 
   void initDimensions(dimension dimensions);
 
-  float operator[](dimension component) const;
+  void operator+=(const Vector &vec);
+
+  float &operator[](dimension component) const;
+
+  // Returns new vector of n-1 dimensions.
+  // Does this by just truncating last component.
+  Vector collapse() const;
 
 private:
   dimension m_dimensions;

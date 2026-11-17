@@ -1,6 +1,7 @@
 #pragma once
 
-#include "ndr/render/Mesh.hpp"
+#include "ndr/geometry/GeometryInstance.hpp"
+#include "ndr/render/DynamicMesh.hpp"
 #include "ndr/render/ShaderProgram.hpp"
 #include "ndr/resources/ResourceLoader.hpp"
 
@@ -19,10 +20,13 @@ public:
 
   void clear();
   void render();
+  void update(double deltaTime);
 
 private:
   ShaderProgram m_program;
-  Mesh m_mesh;
+  geometry::GeometryInstance m_object;
+  DynamicMesh m_mesh;
+  float m_angle = 0.0f;
 };
 
 } // namespace ndr::render

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstddef>
 #include <vector>
 
 namespace ndr::render {
@@ -22,6 +23,10 @@ public:
   void draw();
 
 private:
+  friend class DynamicMesh;
+  void updateVertices(const std::vector<float> &vertices);
+  std::size_t m_vertexBytes = 0;
+
   unsigned int m_vertexBuffer = 0;
   unsigned int m_elementBuffer = 0;
   unsigned int m_vertexArray = 0;

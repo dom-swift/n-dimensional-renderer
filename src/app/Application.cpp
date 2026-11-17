@@ -35,6 +35,7 @@ int Application::run() {
 
     double deltaTime = m_window.deltaTime();
     moveCamera(deltaTime);
+    m_renderer.update(deltaTime);
   }
 
   return 0;

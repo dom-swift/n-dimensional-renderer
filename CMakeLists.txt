@@ -58,11 +58,15 @@ add_executable(ndr
   src/platform/Window.cpp
   src/render/Camera.cpp
   src/render/Mesh.cpp
+  src/render/DynamicMesh.cpp
   src/render/Renderer.cpp
   src/render/ShaderProgram.cpp
   src/resources/ResourceLoader.cpp
   src/math/Vector.cpp
+  src/math/Matrix.cpp
+  src/projection/Perspective.cpp
   src/geometry/Geometry.cpp
+  src/geometry/GeometryInstance.cpp
 )
 
 target_link_libraries(ndr PRIVATE glfw OpenGL::GL glad glm)
